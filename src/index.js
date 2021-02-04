@@ -1,14 +1,37 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {render} from 'react-dom';
 import './index.css';
 import App from './App';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import rootReducer from './reducers';
 import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
+//Redux thunk : Async middleware for Redux
+const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)))
+//above the create store is taking in two arguments
+//a reducer
+// and a enhancer: it is used to specify it to enhance the store
+// with third party capabilities such as middleware, time travel, 
+//persistence, etc.
+// The only store enhancer that ships with redux is applyMiddleware()
+
+
+//thunk, a middleware that allows us to make asynchronous actions in Redux
+
+//The reason we need it is because asynchronous code can't be passed to reducers or 
+//the dispatch method so we use thunk to perform async side effects before calling dispatch
+
+
+render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <Provider store={store}>
+      <App />
+    </Provider>
+</React.StrictMode>,
+document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
